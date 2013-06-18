@@ -74,13 +74,13 @@ def run_cellsim(LTE):
     LTE.waitOutput()
     print "done."
 
-def run_datagrump(server, client):
-    print "Running datagrump-client...",
-    client.sendCmd('/home/ubuntu/datagrump/datagrump-receiver 9000 >/tmp/client-stdout 2>/tmp/client-stderr &')
+def run_web(server, client):
+    print "Running web client...",
+    client.sendCmd('wget http://10.0.1.1/rand.jpg > /tmp/client-stdout 2> /tmp/client-stderr &')
     client.waitOutput()
     print "done."
-    print "Running datagrump-server...",
-    server.sendCmd('/home/ubuntu/datagrump/datagrump-sender 10.0.1.2 9000 debug >/tmp/server-stdout 2>/tmp/server-stderr &')
+    print "Running web server...",
+    server.sendCmd('sudo service apache2 stop && sudo service apache2 start')
     server.waitOutput()
     print "done."
 
@@ -101,8 +101,7 @@ def run_cellsim_topology():
 
     os.system( "killall -q controller" )
     os.system( "killall -q cellsim" )
-    os.system( "killall -q datagrump-sender" )
-    os.system( "killall -q datagrump-receiver" )
+    os.system( "killall -q wget" )
 
     topo = ProtoTester()
     net = Mininet(topo=topo, host=Host, link=Link)
@@ -118,7 +117,7 @@ def run_cellsim_topology():
     #dumpNodeConnections(net.hosts)
     #display_routes(net, server, LTE, client)
 
-    run_datagrump(server, client)
+    run_web(server, client)
 
     run_cellsim(LTE)
 
