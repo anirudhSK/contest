@@ -76,7 +76,7 @@ def run_cellsim(LTE):
 
 def run_web(server, client):
     print "Running web client...",
-    client.sendCmd('wget http://10.0.1.1/rand.jpg > /tmp/client-stdout 2> /tmp/client-stderr &')
+    client.sendCmd('/home/ubuntu/web-benchmarks/phantomjs/bin/phantomjs  /home/ubuntu/web-benchmarks/phantomjs/examples/loadspeed.js http://10.0.1.1/rand.jpg > /tmp/client-stdout 2> /tmp/client-stderr &')
     client.waitOutput()
     print "done."
     print "Running web server...",
@@ -101,7 +101,7 @@ def run_cellsim_topology():
 
     os.system( "killall -q controller" )
     os.system( "killall -q cellsim" )
-    os.system( "killall -q wget" )
+    os.system( "killall -q phantomjs" )
 
     topo = ProtoTester()
     net = Mininet(topo=topo, host=Host, link=Link)
