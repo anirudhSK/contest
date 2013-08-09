@@ -70,7 +70,7 @@ def run_cellsim(LTE):
     LTE.sendCmd('/home/ubuntu/multisend/sender/cellsim-setup.sh LTE-eth0 LTE-eth1')
     LTE.waitOutput()
     print "Running cellsim (this will take a few minutes)..."
-    LTE.sendCmd('/home/ubuntu/multisend/sender/cellsim-runner.sh')
+    LTE.sendCmd('/home/ubuntu/cell-codel/cellsim-runner.sh')
     LTE.waitOutput()
     print "done."
 
@@ -128,13 +128,10 @@ def run_cellsim_topology():
 
 def upload_data( username ):
     print "Uploading data to server...",
-    os.system( 'gzip --stdout /tmp/cellsim-stdout > /tmp/to-upload.gz' )
-    reply = requests.post( 'http://6829.keithw.org/cgi-bin/6829/upload-data',
-                           files={'contents': (username, open( '/tmp/to-upload.gz',
-                                                               'rb' ))} )
-    print "done. Got reply:"
-    print
-    print reply.text
+    os.system('grep "%" /tmp/cellsim-stderr | grep downlink > /tmp/utils')
+    os.system( 'gnuplot -p plot.p')
+    os.system( 'scp downlink.png anirudh@anirudh.csail.mit.edu:~' );
+    print "done"
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
