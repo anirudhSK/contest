@@ -74,18 +74,17 @@ def run_cellsim(LTE):
     LTE.waitOutput()
     print "done."
 
-def run_datagrump(sender, receiver):
-    print "Running datagrump-receiver...",
-    receiver.sendCmd('/home/ubuntu/datagrump/datagrump-receiver 9000 >/tmp/receiver-stdout 2>/tmp/receiver-stderr &')
-    receiver.waitOutput()
-    print "done."
-    print "Running datagrump-sender...",
-    sender.sendCmd('/home/ubuntu/datagrump/datagrump-sender 10.0.1.2 9000 debug >/tmp/sender-stdout 2>/tmp/sender-stderr &')
-    sender.waitOutput()
+def run_apache(sender):
     print "Starting apache server..."
     sender.cmdPrint('/usr/sbin/apache2ctl -f /etc/apache2/apache2.conf')
     sender.waitOutput()
     print "done."
+
+def run_flowrequestr(receiver):
+    print "Starting Flow Requestr at the receiver...",
+    receiver.sendCmd('/home/ubuntu/cell-codel/workloads/on-off.py 10.0.1.1 150 persistent 1 > /tmp/flowreq.stdout 2> /tmp/flowreq.stderr &')
+    receiver.waitOutput()
+    print "done"
 
 def print_welcome_message():
     print "####################################################################"
@@ -108,6 +107,7 @@ def run_cellsim_topology():
     os.system( "killall -q datagrump-receiver" )
     os.system( "service apache2 stop" )
     os.system( "killall -q apache2" )
+    os.system( "killall -q on-off.py")
 
     topo = ProtoTester()
     net = Mininet(topo=topo, host=Host, link=Link)
@@ -123,7 +123,8 @@ def run_cellsim_topology():
     #dumpNodeConnections(net.hosts)
     #display_routes(net, sender, LTE, receiver)
 
-    run_datagrump(sender, receiver)
+    run_apache(sender)
+    run_flowrequestr(receiver)
 
     run_cellsim(LTE)
 
