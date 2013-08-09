@@ -82,6 +82,9 @@ def run_datagrump(sender, receiver):
     print "Running datagrump-sender...",
     sender.sendCmd('/home/ubuntu/datagrump/datagrump-sender 10.0.1.2 9000 debug >/tmp/sender-stdout 2>/tmp/sender-stderr &')
     sender.waitOutput()
+    print "Starting apache server..."
+    sender.cmdPrint('/usr/sbin/apache2ctl -f /etc/apache2/apache2.conf')
+    sender.waitOutput()
     print "done."
 
 def print_welcome_message():
@@ -103,6 +106,8 @@ def run_cellsim_topology():
     os.system( "killall -q cellsim" )
     os.system( "killall -q datagrump-sender" )
     os.system( "killall -q datagrump-receiver" )
+    os.system( "service apache2 stop" )
+    os.system( "killall -q apache2" )
 
     topo = ProtoTester()
     net = Mininet(topo=topo, host=Host, link=Link)
