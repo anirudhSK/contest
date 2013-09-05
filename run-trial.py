@@ -66,11 +66,11 @@ def display_routes(net, sender, LTE, receiver):
     receiver.sendCmd('route -n')
     print receiver.waitOutput()
 
-def run_cellsim(LTE):
+def run_cellsim(LTE, qdisc):
     LTE.sendCmd('/home/ubuntu/multisend/sender/cellsim-setup.sh LTE-eth0 LTE-eth1')
     LTE.waitOutput()
     print "Running cellsim (this will take a few minutes)..."
-    LTE.sendCmd('/home/ubuntu/cell-codel/cellsim-runner.sh')
+    LTE.sendCmd('/home/ubuntu/cell-codel/cellsim-runner.sh ' + qdisc)
     LTE.waitOutput()
     print "done."
 
@@ -98,7 +98,7 @@ def print_welcome_message():
     print "####################################################################"
     print
 
-def run_cellsim_topology():
+def run_cellsim_topology(qdisc):
     print_welcome_message()
 
     os.system( "killall -q controller" )
@@ -126,7 +126,7 @@ def run_cellsim_topology():
     run_apache(sender)
     run_flowrequestr(receiver)
 
-    run_cellsim(LTE)
+    run_cellsim(LTE, qdisc)
 
 #    CLI(net)
 
@@ -140,8 +140,9 @@ def upload_data( username ):
     print "done"
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print "Usage: sudo %s [username]" % sys.argv[ 0 ]
+    if len(sys.argv) != 3:
+        print "Usage: sudo %s [username] [qdisc]" % sys.argv[ 0 ]
     else:
-        run_cellsim_topology()
+        qdisc = sys.argv[ 2 ]
+        run_cellsim_topology(qdisc)
         upload_data( sys.argv[ 1 ] )
