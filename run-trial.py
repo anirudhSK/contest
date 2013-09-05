@@ -76,7 +76,7 @@ def run_cellsim(LTE, qdisc):
 
 def run_apache(sender):
     print "Starting apache server..."
-    sender.cmdPrint('/usr/sbin/apache2ctl -f /etc/apache2/apache2.conf')
+    sender.cmdPrint('/usr/sbin/apache2ctl -f /home/ubuntu/contest/apache2.conf')
     sender.waitOutput()
     print "done."
 
