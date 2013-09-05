@@ -82,7 +82,7 @@ def run_apache(sender):
 
 def run_flowrequestr(receiver):
     print "Starting Flow Requestr at the receiver...",
-    receiver.sendCmd('/home/ubuntu/cell-codel/workloads/on-off.py 10.0.1.1 150 persistent 1 > /tmp/flowreq.stdout 2> /tmp/flowreq.stderr &')
+    receiver.sendCmd('/home/ubuntu/cell-codel/workloads/on-off.py 10.0.1.1 150 persistent 10 > /tmp/flowreq.stdout 2> /tmp/flowreq.stderr &')
     receiver.waitOutput()
     print "done"
 
