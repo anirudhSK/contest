@@ -80,9 +80,9 @@ def run_apache(sender):
     sender.waitOutput()
     print "done."
 
-def run_flowrequestr(receiver):
+def run_flowrequestr(receiver, random_seed):
     print "Starting Flow Requestr at the receiver...",
-    receiver.sendCmd('/home/ubuntu/cell-codel/workloads/on-off.py 10.0.1.1 150 persistent 10 > /tmp/flowreq.stdout 2> /tmp/flowreq.stderr &')
+    receiver.sendCmd('/home/ubuntu/cell-codel/workloads/on-off.py 10.0.1.1 150 persistent 10 '+str(random_seed)+' > /tmp/flowreq.stdout 2> /tmp/flowreq.stderr &')
     receiver.waitOutput()
     print "done"
 
@@ -98,7 +98,7 @@ def print_welcome_message():
     print "####################################################################"
     print
 
-def run_cellsim_topology(qdisc):
+def run_cellsim_topology(qdisc, random_seed):
     print_welcome_message()
 
     os.system( "killall -q controller" )
@@ -124,7 +124,7 @@ def run_cellsim_topology(qdisc):
     #display_routes(net, sender, LTE, receiver)
 
     run_apache(sender)
-    run_flowrequestr(receiver)
+    run_flowrequestr(receiver, random_seed)
 
     run_cellsim(LTE, qdisc)
 
@@ -140,9 +140,10 @@ def upload_data( username ):
     print "done"
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print "Usage: sudo %s [username] [qdisc]" % sys.argv[ 0 ]
+    if len(sys.argv) != 4:
+        print "Usage: sudo %s [username] [qdisc] [random_seed]" % sys.argv[ 0 ]
     else:
         qdisc = sys.argv[ 2 ]
-        run_cellsim_topology(qdisc)
+        random_seed = sys.argv[ 3 ]
+        run_cellsim_topology(qdisc, random_seed)
         upload_data( sys.argv[ 1 ] )
