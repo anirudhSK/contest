@@ -133,10 +133,6 @@ def run_cellsim_topology(qdisc, random_seed):
     net.stop()
 
 def upload_data( username ):
-    print "Uploading data to server...",
-    os.system('grep "%" /tmp/cellsim-stderr | grep downlink > /tmp/utils')
-    os.system( 'gnuplot -p plot.p')
-    os.system( 'scp downlink.png anirudh@anirudh.csail.mit.edu:~' );
     print "done"
 
 if __name__ == '__main__':
