@@ -67,7 +67,7 @@ def display_routes(net, sender, LTE, receiver):
     print receiver.waitOutput()
 
 def run_cellsim(LTE, qdisc):
-    LTE.sendCmd('/home/ubuntu/multisend/sender/cellsim-setup.sh LTE-eth0 LTE-eth1')
+    LTE.sendCmd('/home/ubuntu/contest/cellsim-setup.sh LTE-eth0 LTE-eth1')
     LTE.waitOutput()
     print "Running cellsim (this will take a few minutes)..."
     LTE.sendCmd('/home/ubuntu/cell-codel/cellsim-runner.sh ' + qdisc)
